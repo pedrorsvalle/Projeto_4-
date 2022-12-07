@@ -1,0 +1,79 @@
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <Servo_ESP32.h>
+
+
+
+String HOST_NAME = "https://sistema-inteligente.000webhostapp.com/index.html";
+String PATH_NAME   = "index1a.php";
+
+
+const char* ssid = "";
+const char* password = "";
+
+
+#define MQ_analog 4
+#define MQ_dig 27
+int valor_analog;
+
+int valor_dig;
+int  pin_buzzer=15;
+
+
+
+
+void setup() {
+  Serial.begin(9600); // Declara o BaundRate em 9600
+   pinMode(MQ_analog, INPUT);
+   pinMode(MQ_dig, INPUT);
+   pinMode(pin_buzzer, OUTPUT);
+
+
+  WiFi.begin(ssid,password);
+  Serial.println("Connecting");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.println(WiFi.status() );
+  }
+  Serial.println(WiFi.localIP());
+  Serial.println(WiFi.macAddress());
+
+}
+
+
+void loop() {
+   valor_analog = analogRead(MQ_analog); 
+   valor_dig = digitalRead(MQ_dig);
+   Serial.print(valor_analog);
+   Serial.print(" || ");
+   if(valor_dig == 0)
+   {
+  
+  }
+
+  else { // Se não ...
+   
+  }
+  delay (1000); // Estabelece o tempo de 1s para reinicializar a leitura
+
+
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    int dado = cadastro;
+    String url = "https://sistema-inteligente.000webhostapp.com/index1a.php"; + "?v="+ dado;
+    http.begin(url);
+    int httpResponseCode = http.GET();
+    if (httpResponseCode > 0) {
+      Serial.print("HTTP Response code: ");
+      Serial.println(httpResponseCode);
+      String respostaPHP = http.getString();
+      Serial.println(respostaPHP);
+    }
+    else {
+      Serial.print("Error code: ");
+      Serial.println(httpResponseCode);
+    }
+    http.end();
+    delay(2000);
+  }
+}
